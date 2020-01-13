@@ -9,84 +9,58 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
 exports.index = (req, res) => {
-    if (req.query.title !== undefined){ 
-        Events.findAll({
-            include:[
-                {model: Users, attributes: ['id','name', 'phone', 'email'], as:"eventCreator"},  
-                {model: Categories, attributes: ['id', 'name'], as:"eventCategory"}
-            ],
-            where: {
-                title: {
-                    [Op.like]: `%${req.query.title}%`
-                }
+    let condition = {};
+    if (
+        req.query.title !== undefined 
+        && req.query.start_date !== undefined 
+        && req.query.end_date !== undefined 
+    ){
+        condition = {
+            title: {
+                [Op.like]: `%${req.query.title}%`
+            },
+            startTime: {
+                [Op.gte]: req.query.start_date,
+                [Op.lte]: req.query.end_date
             }
-        })
-        .then(events=> {
-            if (events.length !== 0) {
-                res.send({
-                    events,
-                    notFound: false
-                })  
-            }else{
-                res.send({
-                    events,
-                    notFound: true
-                })
+        }
+    }else if (req.query.title !== undefined){ 
+        condition = {
+            title: {
+                [Op.like]: `%${req.query.title}%`
             }
-        })
-        .catch(err => res.send(err))
-    }else if (req.query.start_date !== undefined && req.query.end_date !== undefined ){
-        Events.findAll({
-            include:[
-                {model: Users, attributes: ['id','name', 'phone', 'email'], as:"eventCreator"},  
-                {model: Categories, attributes: ['id', 'name'], as:"eventCategory"}
-            ],
-            where: {
-                startTime: {
-                    [Op.gte]: req.query.start_date,
-                    [Op.lte]: req.query.end_date
-                }
+        }
+    } else if (req.query.start_date !== undefined && req.query.end_date !== undefined ){
+        condition = {
+            startTime: {
+                [Op.gte]: req.query.start_date,
+                [Op.lte]: req.query.end_date
             }
-        })
-        .then(events=> {
-            if (events.length !== 0) {
-                res.send({
-                    events,
-                    dateEmpty: false
-                })  
-            }else{
-                res.send({
-                    events,
-                    dateEmpty: true
-                })
-            }
-        })
-        .catch(err => res.send(err))
-    }else{
-        Events.findAll({
-            include:[
-                {model: Users, attributes: ['id','name', 'phone', 'email'], as:"eventCreator"},  
-                {model: Categories, attributes: ['id', 'name'], as:"eventCategory"}
-            ]
-        })
-        .then(events=>res.send(events))
-        .catch(err => res.send(err))
+        }
     }
-}
 
-// exports.today = (req, res) => {
-//     Events.findAll({
-//         include:[
-//             {model: Users, attributes: ['name', 'phone', 'email'], as:"eventCreator"},  
-//             {model: Categories, as:"eventCategory"}
-//         ],
-//         where:{
-//             start: req.params.start_time
-//         }
-//     })
-//     .then(events=>res.send(events))
-//     .catch(err => res.send(err))
-// }
+    Events.findAll({ 
+        include:[
+            {model: Users, attributes: ['id','name', 'phone', 'email'], as:"eventCreator"},  
+            {model: Categories, attributes: ['id', 'name'], as:"eventCategory"}
+        ],
+        where : condition
+    })
+    .then(events=>{
+         if (events.length !== 0) {
+            res.send({
+                events,
+                notFound: false
+            })  
+        }else{
+            res.send({
+                events,
+                notFound: true
+            })
+        }
+    })
+    .catch(err => res.send(err))
+}
 
 exports.eventsByCategory = (req, res) => {
     Events.findAll({
