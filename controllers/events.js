@@ -10,21 +10,7 @@ const Op = Sequelize.Op;
 
 exports.index = (req, res) => {
     let condition = {};
-    if (
-        req.query.title !== undefined 
-        && req.query.start_date !== undefined 
-        && req.query.end_date !== undefined 
-    ){
-        condition = {
-            title: {
-                [Op.like]: `%${req.query.title}%`
-            },
-            startTime: {
-                [Op.gte]: req.query.start_date,
-                [Op.lte]: req.query.end_date
-            }
-        }
-    }else if (req.query.title !== undefined){ 
+    if (req.query.title !== undefined){ 
         condition = {
             title: {
                 [Op.like]: `%${req.query.title}%`
