@@ -9,6 +9,7 @@ const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 
 exports.index = (req, res) => {
+    console.log(req.query.title);
     let condition = {};
     if (req.query.title !== undefined){ 
         condition = {

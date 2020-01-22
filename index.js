@@ -31,27 +31,27 @@ app.use(function (req, res, next) {
 
 app.group("/api/v1", (router) => {
 	
-	router.get('/categories', Categories.index) // 1
+	router.get('/categories', Categories.index)
 	router.get('/events', Events.index)
 
-	router.get('/category/:id/events', Events.eventsByCategory) // 2
+	router.get('/category/:id/events', Events.eventsByCategory) 
 
-	router.post('/login', Auth.login)//3
-	router.post('/register', Auth.register)//4
-	router.get('/event/:id', Events.show) // 6
+	router.post('/login', Auth.login)
+	router.post('/register', Auth.register)
+	router.get('/event/:id', Events.show)
 
-	router.get('/user/:id', authenticated, Users.show) // 7
-	router.get('/user/:id/favorites', authenticated, Favorites.favorites) // 7
+	router.get('/user/:id', authenticated, Users.show)
+	router.get('/user/:id/favorites', authenticated, Favorites.favorites) 
 
-	router.get('/orders', Orders.index) // 8
-	router.post('/order', authenticated, Orders.store) //6
-	router.get('/user/:id/orders', authenticated,Orders.orderByUser) // 8
-	router.put('/order/:id', Orders.update) // 8
-	router.get('/order/:id/approved', authenticated, Orders.approved) // 8
+	router.get('/orders', Orders.index)
+	router.post('/order', authenticated, Orders.store) 
+	router.get('/user/:id/orders', authenticated,Orders.orderByUser)
+	router.put('/order/:id', Orders.update) 
+	router.get('/order/:id/approved', authenticated, Orders.approved)
 
-	router.get('/user/:id/events', authenticated, Events.eventsByUser) // 9 my ticket
+	router.get('/user/:id/events', authenticated, Events.eventsByUser) 
 	
-	router.post('/event', authenticated, Events.store) // 10
+	router.post('/event', authenticated, Events.store)
 	router.put('/event/:id', authenticated, Events.update) 
 	router.delete('/event/:id', authenticated, Events.delete) 
 
