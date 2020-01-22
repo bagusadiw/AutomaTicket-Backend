@@ -13,7 +13,7 @@ exports.index = (req, res) => {
     if (req.query.title !== undefined){ 
         condition = {
             title: {
-                [Op.like]: `%${req.query.title.toLowerCase()}%`
+                [Op.iLike]: `%${req.query.title}%`
             }
         }
     } else if (req.query.start_date !== undefined && req.query.end_date !== undefined ){
